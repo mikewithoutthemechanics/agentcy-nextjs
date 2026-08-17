@@ -62,8 +62,16 @@ export default function Home() {
 }
 
 function Preloader() {
+  const [show, setShow] = useState(true);
+  useEffect(() => {
+    const timer = setTimeout(() => setShow(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
+  
+  if (!show) return null;
+  
   return (
-    <div className="fixed inset-0 z-[9999] bg-[#080b10] flex items-center justify-center">
+    <div className="fixed inset-0 z-[9999] bg-[#080b10] flex items-center justify-center transition-opacity duration-300">
       <div className="text-center">
         <img 
           src="https://cdn.prod.website-files.com/69abbb96278770785e4b2dc1/69b0dc9033646175674e6d28_logoicon.svg" 
