@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 
 interface BookingModalProps {
   close: () => void;
@@ -24,7 +24,7 @@ export default function BookingModal({ close }: BookingModalProps) {
     }, 50);
   };
 
-  const handleName = (name: string) => {
+  const handleName = useCallback((name: string) => {
     if (!name.trim()) return;
     const newAnswers = { ...answers, name: name.trim() };
     setAnswers(newAnswers);
@@ -42,7 +42,7 @@ export default function BookingModal({ close }: BookingModalProps) {
         className="w-full bg-white border border-white/20 rounded-xl px-4 py-3 text-white placeholder-white/50 focus:border-[#3aafa9] focus:outline-none focus:ring-2 focus:ring-[#3aafa9]/30"
       />
     );
-  };
+  }, [answers, handleBusiness]);
 
   const handleBusiness = (business: string) => {
     if (!business.trim()) return;
@@ -79,9 +79,9 @@ export default function BookingModal({ close }: BookingModalProps) {
         <button onClick={() => handleMode('Request an on-site visit')} className="w-full text-left border border-white/20 bg-white/5 rounded-xl px-4 py-3 text-white hover:bg-white/10 transition-colors">
           Request an on-site visit
         </button>
-        <button onClick={() => handleMode('I\'m not sure')} className="w-full text-left border border-white/20 bg-white/5 rounded-xl px-4 py-3 text-white hover:bg-white/10 transition-colors">
-          I'm not sure
-        </button>
+<button onClick={() => handleMode('I&apos;m not sure')} className="w-full text-left border border-white/20 bg-white/5 rounded-xl px-4 py-3 text-white hover:bg-white/10 transition-colors">
+            I&apos;m not sure
+          </button>
       </div>
     );
   };
@@ -112,7 +112,7 @@ export default function BookingModal({ close }: BookingModalProps) {
     addBubble(engagement, 'me');
     setTimeout(() => {
       if (answers.mode === 'Request an on-site visit') {
-        addBubble('Perfect. We\'ll review your on-site request for the North Coast of KZN or Garden Route, WC.');
+        addBubble('Perfect. We&apos;ll review your on-site request for the North Coast of KZN or Garden Route, WC.');
         setChoices(
           <a
             href={`mailto:ai@agentcy.co.za?subject=${encodeURIComponent('On-site audit request — ' + answers.business)}&body=${encodeURIComponent(`Name: ${answers.name}\nBusiness: ${answers.business}\nEmail: ${answers.email}\nPreferred engagement: ${answers.engagement}\n\nPlease contact me about an on-site audit visit.`)}`}
@@ -138,7 +138,7 @@ export default function BookingModal({ close }: BookingModalProps) {
   };
 
   useEffect(() => {
-    addBubble('Hi — I\'ll ask three quick questions, then help you choose the right next step.');
+    addBubble('Hi &mdash; I&apos;ll ask three quick questions, then help you choose the right next step.');
     setTimeout(() => {
       setStep('name');
       setChoices(
@@ -154,7 +154,7 @@ export default function BookingModal({ close }: BookingModalProps) {
         />
       );
     }, 500);
-  }, []);
+  }, [handleName]);
 
   useEffect(() => {
     if (typeof document !== 'undefined') {
@@ -196,7 +196,7 @@ export default function BookingModal({ close }: BookingModalProps) {
           <strong className="text-white">Agentcy · Audit assistant</strong>
           <span></span>
         </div>
-        <h2 id="bookingTitle" className="text-center mt-4 text-lg font-bold text-white">Let's get your audit started.</h2>
+        <h2 id="bookingTitle" className="text-center mt-4 text-lg font-bold text-white">Let&apos;s get your audit started.</h2>
         <div 
           ref={threadRef}
           className="imsg-thread h-64 overflow-y-auto p-4 space-y-3"
