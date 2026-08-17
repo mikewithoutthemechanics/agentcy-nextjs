@@ -24,6 +24,27 @@ export default function BookingModal({ close }: BookingModalProps) {
     }, 50);
   };
 
+  const handleBusiness = useCallback((business: string) => {
+    if (!business.trim()) return;
+    const newAnswers = { ...answers, business: business.trim() };
+    setAnswers(newAnswers);
+    addBubble(business.trim(), 'me');
+    setStep('email');
+    setChoices(
+      <input
+        type="email"
+        placeholder="Business email"
+        autoFocus
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' && (e.target as HTMLInputElement).value.trim()) {
+            handleEmail((e.target as HTMLInputElement).value.trim());
+          }
+        }}
+        className="w-full bg-white border border-white/20 rounded-xl px-4 py-3 text-white placeholder-white/50 focus:border-[#3aafa9] focus:outline-none focus:ring-2 focus:ring-[#3aafa9]/30"
+      />
+    );
+  }, [answers, handleEmail]);
+
   const handleName = useCallback((name: string) => {
     if (!name.trim()) return;
     const newAnswers = { ...answers, name: name.trim() };
@@ -44,28 +65,7 @@ export default function BookingModal({ close }: BookingModalProps) {
     );
   }, [answers, handleBusiness]);
 
-  const handleBusiness = (business: string) => {
-    if (!business.trim()) return;
-    const newAnswers = { ...answers, business: business.trim() };
-    setAnswers(newAnswers);
-    addBubble(business.trim(), 'me');
-    setStep('email');
-    setChoices(
-      <input
-        type="email"
-        placeholder="Business email"
-        autoFocus
-        onKeyDown={(e) => {
-          if (e.key === 'Enter' && (e.target as HTMLInputElement).value.trim()) {
-            handleEmail((e.target as HTMLInputElement).value.trim());
-          }
-        }}
-        className="w-full bg-white border border-white/20 rounded-xl px-4 py-3 text-white placeholder-white/50 focus:border-[#3aafa9] focus:outline-none focus:ring-2 focus:ring-[#3aafa9]/30"
-      />
-    );
-  };
-
-  const handleEmail = (email: string) => {
+  const handleEmail = useCallback((email: string) => {
     if (!email.trim()) return;
     const newAnswers = { ...answers, email: email.trim() };
     setAnswers(newAnswers);
@@ -79,14 +79,14 @@ export default function BookingModal({ close }: BookingModalProps) {
         <button onClick={() => handleMode('Request an on-site visit')} className="w-full text-left border border-white/20 bg-white/5 rounded-xl px-4 py-3 text-white hover:bg-white/10 transition-colors">
           Request an on-site visit
         </button>
-<button onClick={() => handleMode('I&apos;m not sure')} className="w-full text-left border border-white/20 bg-white/5 rounded-xl px-4 py-3 text-white hover:bg-white/10 transition-colors">
-            I&apos;m not sure
-          </button>
+        <button onClick={() => handleMode('I&apos;m not sure')} className="w-full text-left border border-white/20 bg-white/5 rounded-xl px-4 py-3 text-white hover:bg-white/10 transition-colors">
+          I&apos;m not sure
+        </button>
       </div>
     );
-  };
+  }, [answers, handleMode]);
 
-  const handleMode = (mode: string) => {
+  const handleMode = useCallback((mode: string) => {
     const newAnswers = { ...answers, mode };
     setAnswers(newAnswers);
     addBubble(mode, 'me');
@@ -104,9 +104,9 @@ export default function BookingModal({ close }: BookingModalProps) {
         </button>
       </div>
     );
-  };
+  }, [answers, handleEngagement]);
 
-  const handleEngagement = (engagement: string) => {
+  const handleEngagement = useCallback((engagement: string) => {
     const newAnswers = { ...answers, engagement };
     setAnswers(newAnswers);
     addBubble(engagement, 'me');
@@ -118,7 +118,7 @@ export default function BookingModal({ close }: BookingModalProps) {
             href={`mailto:ai@agentcy.co.za?subject=${encodeURIComponent('On-site audit request — ' + answers.business)}&body=${encodeURIComponent(`Name: ${answers.name}\nBusiness: ${answers.business}\nEmail: ${answers.email}\nPreferred engagement: ${answers.engagement}\n\nPlease contact me about an on-site audit visit.`)}`}
             className="w-full inline-flex items-center justify-center gap-2 bg-[#3aafa9] text-[#071014] px-6 py-4 rounded-full font-bold hover:bg-[#2d8a86] transition-colors"
           >
-            Request on-site visit →
+            Request on-site visit &rarr;
           </a>
         );
       } else {
@@ -130,12 +130,12 @@ export default function BookingModal({ close }: BookingModalProps) {
             rel="noopener"
             className="w-full inline-flex items-center justify-center gap-2 bg-[#3aafa9] text-[#071014] px-6 py-4 rounded-full font-bold hover:bg-[#2d8a86] transition-colors"
           >
-            Open the live booking calendar →
+            Open the live booking calendar &rarr;
           </a>
         );
       }
     }, 240);
-  };
+  }, [answers]);
 
   useEffect(() => {
     addBubble('Hi &mdash; I&apos;ll ask three quick questions, then help you choose the right next step.');
@@ -189,11 +189,11 @@ export default function BookingModal({ close }: BookingModalProps) {
           aria-label="Close"
           onClick={close}
         >
-          ×
+          &times;
         </button>
         <div className="imsg-top flex items-center justify-between px-4 py-4 border-b border-white/10">
           <span></span>
-          <strong className="text-white">Agentcy · Audit assistant</strong>
+          <strong className="text-white">Agentcy &middot; Audit assistant</strong>
           <span></span>
         </div>
         <h2 id="bookingTitle" className="text-center mt-4 text-lg font-bold text-white">Let&apos;s get your audit started.</h2>
