@@ -24,6 +24,78 @@ export default function BookingModal({ close }: BookingModalProps) {
     }, 50);
   };
 
+  const handleEngagement = useCallback((engagement: string) => {
+    const newAnswers = { ...answers, engagement };
+    setAnswers(newAnswers);
+    addBubble(engagement, 'me');
+    setTimeout(() => {
+      if (answers.mode === 'Request an on-site visit') {
+        addBubble('Perfect. We&apos;ll review your on-site request for the North Coast of KZN or Garden Route, WC.');
+        setChoices(
+          <a
+            href={`mailto:ai@agentcy.co.za?subject=${encodeURIComponent('On-site audit request — ' + answers.business)}&body=${encodeURIComponent(`Name: ${answers.name}\nBusiness: ${answers.business}\nEmail: ${answers.email}\nPreferred engagement: ${answers.engagement}\n\nPlease contact me about an on-site audit visit.`)}`}
+            className="w-full inline-flex items-center justify-center gap-2 bg-[#3aafa9] text-[#071014] px-6 py-4 rounded-full font-bold hover:bg-[#2d8a86] transition-colors"
+          >
+            Request on-site visit &rarr;
+          </a>
+        );
+      } else {
+        addBubble('Perfect. Choose a time for your no-strings introductory audit call.');
+        setChoices(
+          <a
+            href="https://cal.com/michael-from-agentcy/30min?embed=true&theme=light"
+            target="_blank"
+            rel="noopener"
+            className="w-full inline-flex items-center justify-center gap-2 bg-[#3aafa9] text-[#071014] px-6 py-4 rounded-full font-bold hover:bg-[#2d8a86] transition-colors"
+          >
+            Open the live booking calendar &rarr;
+          </a>
+        );
+      }
+    }, 240);
+  }, [answers]);
+
+  const handleMode = useCallback((mode: string) => {
+    const newAnswers = { ...answers, mode };
+    setAnswers(newAnswers);
+    addBubble(mode, 'me');
+    setStep('engagement');
+    setChoices(
+      <div className="flex flex-col gap-3 w-full">
+        <button onClick={() => handleEngagement('Remote')} className="w-full text-left border border-white/20 bg-white/5 rounded-xl px-4 py-3 text-white hover:bg-white/10 transition-colors">
+          Remote
+        </button>
+        <button onClick={() => handleEngagement('On-site')} className="w-full text-left border border-white/20 bg-white/5 rounded-xl px-4 py-3 text-white hover:bg-white/10 transition-colors">
+          On-site
+        </button>
+        <button onClick={() => handleEngagement('Unsure')} className="w-full text-left border border-white/20 bg-white/5 rounded-xl px-4 py-3 text-white hover:bg-white/10 transition-colors">
+          Unsure
+        </button>
+      </div>
+    );
+  }, [answers, handleEngagement]);
+
+  const handleEmail = useCallback((email: string) => {
+    if (!email.trim()) return;
+    const newAnswers = { ...answers, email: email.trim() };
+    setAnswers(newAnswers);
+    addBubble(email.trim(), 'me');
+    setStep('mode');
+    setChoices(
+      <div className="flex flex-col gap-3 w-full">
+        <button onClick={() => handleMode('Remote audit call')} className="w-full text-left border border-white/20 bg-white/5 rounded-xl px-4 py-3 text-white hover:bg-white/10 transition-colors">
+          Remote audit call
+        </button>
+        <button onClick={() => handleMode('Request an on-site visit')} className="w-full text-left border border-white/20 bg-white/5 rounded-xl px-4 py-3 text-white hover:bg-white/10 transition-colors">
+          Request an on-site visit
+        </button>
+        <button onClick={() => handleMode('I&apos;m not sure')} className="w-full text-left border border-white/20 bg-white/5 rounded-xl px-4 py-3 text-white hover:bg-white/10 transition-colors">
+          I&apos;m not sure
+        </button>
+      </div>
+    );
+  }, [answers, handleMode]);
+
   const handleBusiness = useCallback((business: string) => {
     if (!business.trim()) return;
     const newAnswers = { ...answers, business: business.trim() };
@@ -65,77 +137,22 @@ export default function BookingModal({ close }: BookingModalProps) {
     );
   }, [answers, handleBusiness]);
 
-  const handleEmail = useCallback((email: string) => {
-    if (!email.trim()) return;
-    const newAnswers = { ...answers, email: email.trim() };
-    setAnswers(newAnswers);
-    addBubble(email.trim(), 'me');
-    setStep('mode');
-    setChoices(
-      <div className="flex flex-col gap-3 w-full">
-        <button onClick={() => handleMode('Remote audit call')} className="w-full text-left border border-white/20 bg-white/5 rounded-xl px-4 py-3 text-white hover:bg-white/10 transition-colors">
-          Remote audit call
-        </button>
-        <button onClick={() => handleMode('Request an on-site visit')} className="w-full text-left border border-white/20 bg-white/5 rounded-xl px-4 py-3 text-white hover:bg-white/10 transition-colors">
-          Request an on-site visit
-        </button>
-        <button onClick={() => handleMode('I&apos;m not sure')} className="w-full text-left border border-white/20 bg-white/5 rounded-xl px-4 py-3 text-white hover:bg-white/10 transition-colors">
-          I&apos;m not sure
-        </button>
-      </div>
-    );
-  }, [answers, handleMode]);
-
-  const handleMode = useCallback((mode: string) => {
-    const newAnswers = { ...answers, mode };
-    setAnswers(newAnswers);
-    addBubble(mode, 'me');
-    setStep('engagement');
-    setChoices(
-      <div className="flex flex-col gap-3 w-full">
-        <button onClick={() => handleEngagement('Remote')} className="w-full text-left border border-white/20 bg-white/5 rounded-xl px-4 py-3 text-white hover:bg-white/10 transition-colors">
-          Remote
-        </button>
-        <button onClick={() => handleEngagement('On-site')} className="w-full text-left border border-white/20 bg-white/5 rounded-xl px-4 py-3 text-white hover:bg-white/10 transition-colors">
-          On-site
-        </button>
-        <button onClick={() => handleEngagement('Unsure')} className="w-full text-left border border-white/20 bg-white/5 rounded-xl px-4 py-3 text-white hover:bg-white/10 transition-colors">
-          Unsure
-        </button>
-      </div>
-    );
-  }, [answers, handleEngagement]);
-
-  const handleEngagement = useCallback((engagement: string) => {
-    const newAnswers = { ...answers, engagement };
-    setAnswers(newAnswers);
-    addBubble(engagement, 'me');
+  const addBubble = (text: string, who: 'them' | 'me' = 'them') => {
+    setThread(prev => [...prev, { text, who }]);
     setTimeout(() => {
-      if (answers.mode === 'Request an on-site visit') {
-        addBubble('Perfect. We&apos;ll review your on-site request for the North Coast of KZN or Garden Route, WC.');
-        setChoices(
-          <a
-            href={`mailto:ai@agentcy.co.za?subject=${encodeURIComponent('On-site audit request — ' + answers.business)}&body=${encodeURIComponent(`Name: ${answers.name}\nBusiness: ${answers.business}\nEmail: ${answers.email}\nPreferred engagement: ${answers.engagement}\n\nPlease contact me about an on-site audit visit.`)}`}
-            className="w-full inline-flex items-center justify-center gap-2 bg-[#3aafa9] text-[#071014] px-6 py-4 rounded-full font-bold hover:bg-[#2d8a86] transition-colors"
-          >
-            Request on-site visit &rarr;
-          </a>
-        );
-      } else {
-        addBubble('Perfect. Choose a time for your no-strings introductory audit call.');
-        setChoices(
-          <a
-            href="https://cal.com/michael-from-agentcy/30min?embed=true&theme=light"
-            target="_blank"
-            rel="noopener"
-            className="w-full inline-flex items-center justify-center gap-2 bg-[#3aafa9] text-[#071014] px-6 py-4 rounded-full font-bold hover:bg-[#2d8a86] transition-colors"
-          >
-            Open the live booking calendar &rarr;
-          </a>
-        );
+      if (threadRef.current) {
+        threadRef.current.scrollTop = threadRef.current.scrollHeight;
       }
-    }, 240);
-  }, [answers]);
+    }, 50);
+  };
+
+  const [thread, setThread] = useState<{ text: string; who: 'them' | 'me' }[]>([]);
+  const [choices, setChoices] = useState<React.ReactNode>(null);
+  const [answers, setAnswers] = useState<Record<string, string>>({});
+  const [step, setStep] = useState<string>('name');
+  const threadRef = useRef<HTMLDivElement>(null);
+
+  const cal = 'https://cal.com/michael-from-agentcy/30min?embed=true&theme=light';
 
   useEffect(() => {
     addBubble('Hi &mdash; I&apos;ll ask three quick questions, then help you choose the right next step.');
