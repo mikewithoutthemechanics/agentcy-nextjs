@@ -5,6 +5,7 @@ import Link from 'next/link';
 
 interface NavigationProps {
   openBooking: () => void;
+  scrolled: boolean;
 }
 
 export default function Navigation({ openBooking }: NavigationProps) {
