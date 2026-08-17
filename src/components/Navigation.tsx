@@ -1,6 +1,5 @@
 'use client';
 
-import { useEffect } from 'react';
 import Link from 'next/link';
 
 interface NavigationProps {
@@ -11,30 +10,6 @@ interface NavigationProps {
 }
 
 export default function Navigation({ openBooking, scrolled, menuOpen, setMenuOpen }: NavigationProps) {
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  // We need a local state for scrolled since it's passed as a prop but we need to update it
-  // Actually, the parent manages scrolled state, so we should use the prop
-  // But we can't update a prop, so we need to use a local state that's synced
-  // Actually, the parent manages scrolled, so we just use the prop for rendering
-  // The issue is that the parent's scrolled state is not accessible here
-  // Let's just use a local state for scrolled since it's internal to navigation
-  // Wait, the parent passes scrolled as a prop, but we can't update it
-  // The cleanest solution: use local state for both menuOpen and scrolled
-  // But the parent expects to control menuOpen...
-  // Actually, looking at the page.tsx, it manages both menuOpen and scrolled
-  // The Navigation component should use the props for menuOpen/setMenuOpen
-  // and use the scrolled prop for rendering
-  // But we can't update scrolled from here since it's a prop
-  // The scroll listener should be in the parent, which it is
-  // So we just use the props
-
   return (
     <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'bg-[#080b10]/90 backdrop-blur-md border-b border-white/10' : ''}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
