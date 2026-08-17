@@ -137,23 +137,6 @@ export default function BookingModal({ close }: BookingModalProps) {
     );
   }, [answers, handleBusiness]);
 
-  const addBubble = (text: string, who: 'them' | 'me' = 'them') => {
-    setThread(prev => [...prev, { text, who }]);
-    setTimeout(() => {
-      if (threadRef.current) {
-        threadRef.current.scrollTop = threadRef.current.scrollHeight;
-      }
-    }, 50);
-  };
-
-  const [thread, setThread] = useState<{ text: string; who: 'them' | 'me' }[]>([]);
-  const [choices, setChoices] = useState<React.ReactNode>(null);
-  const [answers, setAnswers] = useState<Record<string, string>>({});
-  const [step, setStep] = useState<string>('name');
-  const threadRef = useRef<HTMLDivElement>(null);
-
-  const cal = 'https://cal.com/michael-from-agentcy/30min?embed=true&theme=light';
-
   useEffect(() => {
     addBubble('Hi &mdash; I&apos;ll ask three quick questions, then help you choose the right next step.');
     setTimeout(() => {
